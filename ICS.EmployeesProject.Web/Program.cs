@@ -1,4 +1,11 @@
+using ICS.EmployeesProject.Configuration;
+using ICS.EmployeesProject.DAL.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.RegisterRepository();
+
+builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection(ApplicationConfiguration.ConnectionStrings));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+    <Folder Include="Services\" />
+    <Folder Include="Mapping\" />
+    <Folder Include="DTOs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ICS.EmployeesProject.Configuration\ICS.EmployeesProject.Configuration.csproj" />
+    <ProjectReference Include="..\ICS.EmployeesProject.DAL\ICS.EmployeesProject.DAL.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -2,6 +2,6 @@
 {
     public class ApplicationConfiguration
     {
-
+        public const string ConnectionStrings = "ConnectionStrings";
     }
 }
