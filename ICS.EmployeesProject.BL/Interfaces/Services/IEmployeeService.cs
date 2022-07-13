@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ICS.EmployeesProject.BL.DTOs.Request;
+using ICS.EmployeesProject.BL.DTOs.Response;
 
 namespace ICS.EmployeesProject.BL.Interfaces.Services
 {
-    internal interface IEmployeeService
+    public interface IEmployeeService
     {
+        IEnumerable<EmployeeResponse> GetAll();
+        EmployeeResponse Get(int id);
+        bool Create(EmployeeRequest model);
+        bool Update(EmployeeRequest model);
+        bool Delete(int id);
     }
 }
