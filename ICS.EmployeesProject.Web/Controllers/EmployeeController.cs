@@ -15,9 +15,14 @@ namespace ICS.EmployeesProject.Web.Controllers
             _employeeService = employeeService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string filterBy)
         {
             var employees = _employeeService.GetAll();
+
+            if (!String.IsNullOrEmpty(filterBy))
+            {
+                employees = employees.Where(e => e.Position.ToUpper().Contains(filterBy.ToUpper()));
+            }
 
             return View(employees);
         }
