@@ -21,12 +21,11 @@ namespace ICS.EmployeesProject.BL.Services
                 var worksheet = excel.Workbook.Worksheets["Worksheet1"];
 
                 worksheet.Cells[headerRange].LoadFromArrays(headerRow);
+                worksheet.Cells[2, 1].LoadFromArrays(cellData);
 
                 worksheet.Cells[headerRange].Style.Font.Bold = true;
                 worksheet.Cells[headerRange].Style.Font.Size = 14;
                 worksheet.Cells[headerRange].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
-
-                worksheet.Cells[2, 1].LoadFromArrays(cellData);
 
                 excel.Save();
 
