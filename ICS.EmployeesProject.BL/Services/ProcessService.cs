@@ -1,4 +1,5 @@
 ﻿using ICS.EmployeesProject.BL.Interfaces.Services;
+using ICS.EmployeesProject.Configuration;
 using OfficeOpenXml;
 using System.Diagnostics;
 
@@ -10,15 +11,15 @@ namespace ICS.EmployeesProject.BL.Services
         {
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
 
-            var fileName = DateTime.UtcNow.ToString().Replace(':', '.').Replace(' ', '.');
+            var filePath = string.Format(ApplicationConfiguration.FilePath, DateTime.UtcNow.ToString().Replace(':', '.').Replace(' ', '.'));
 
-            using (var excel = new ExcelPackage(new FileInfo($@"reports\{fileName}.xlsx")))
+            using (var excel = new ExcelPackage(new FileInfo(filePath)))
             {
-                excel.Workbook.Worksheets.Add("Worksheet1");
+                excel.Workbook.Worksheets.Add(ApplicationConfiguration.WorksheetName);
 
-                string headerRange = "A1:" + Char.ConvertFromUtf32(headerRow[0].Length + 64) + "1";
+                string headerRange = ApplicationConfiguration.TableCell + Char.ConvertFromUtf32(headerRow[0].Length + 64) + ApplicationConfiguration.TableNumberOfLength;
 
-                var worksheet = excel.Workbook.Worksheets["Worksheet1"];
+                var worksheet = excel.Workbook.Worksheets[ApplicationConfiguration.WorksheetName];
 
                 worksheet.Cells[headerRange].LoadFromArrays(headerRow);
                 worksheet.Cells[2, 1].LoadFromArrays(cellData);
@@ -29,15 +30,18 @@ namespace ICS.EmployeesProject.BL.Services
 
                 excel.Save();
 
-                bool isExcelInstalled = Type.GetTypeFromProgID("Excel.Application") != null;
+                bool isExcelInstalled = Type.GetTypeFromProgID(ApplicationConfiguration.ExcelSystemName) != null;
 
                 if (isExcelInstalled)
                 {
-                    string myPath = $@"reports\{fileName}.xlsx";
+                    string myPath = filePath;
+
                     ProcessStartInfo ps = new ProcessStartInfo();
-                    ps.FileName = "excel"; // "EXCEL.EXE" also works
+
+                    ps.FileName = ApplicationConfiguration.ExcelFileName; 
                     ps.Arguments = myPath;
                     ps.UseShellExecute = true;
+
                     Process.Start(ps);
                 }
 

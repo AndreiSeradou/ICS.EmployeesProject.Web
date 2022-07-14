@@ -1,5 +1,6 @@
 ﻿using ICS.EmployeesProject.BL.DTOs.Request;
 using ICS.EmployeesProject.BL.Interfaces.Services;
+using ICS.EmployeesProject.Configuration;
 using ICS.EmployeesProject.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -19,14 +20,21 @@ namespace ICS.EmployeesProject.Web.Controllers
 
         public IActionResult Index(string filterBy)
         {
-            var employees = _employeeService.GetAll();
-
-            if (!String.IsNullOrEmpty(filterBy))
+            try
             {
-                employees = employees.Where(e => e.Position.ToUpper().Contains(filterBy.ToUpper()));
-            }
+                var employees = _employeeService.GetAll();
 
-            return View(employees);
+                if (!String.IsNullOrEmpty(filterBy))
+                {
+                    employees = employees.Where(e => e.Position.ToUpper().Contains(filterBy.ToUpper()));
+                }
+
+                return View(employees);
+            }
+            catch
+            {
+                return RedirectToAction(ApplicationConfiguration.ErrorAction);
+            }
         }
 
         public IActionResult Create()
@@ -37,89 +45,124 @@ namespace ICS.EmployeesProject.Web.Controllers
         [HttpPost]
         public IActionResult Create(EmployeeRequest model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = _employeeService.Create(model);
+                if (ModelState.IsValid)
+                {
+                    var result = _employeeService.Create(model);
 
-                if (result is false)
-                    return View();
+                    if (result is false)
+                        return View();
 
-                return RedirectToAction("Index");
+                    return RedirectToAction(ApplicationConfiguration.IndexAction);
+                }
+
+                return View();
             }
-
-            return View();
+            catch
+            {
+                return RedirectToAction(ApplicationConfiguration.ErrorAction);
+            }
         }
 
         public IActionResult Edit(int id)
         {
-            var employee = _employeeService.Get(id);
+            try
+            {
+                var employee = _employeeService.Get(id);
 
-            return View(employee);
+                return View(employee);
+            }
+            catch
+            {
+                return RedirectToAction(ApplicationConfiguration.ErrorAction);
+            }
         }
 
         [HttpPost]
         public IActionResult Edit(EmployeeRequest model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = _employeeService.Update(model);
+                if (ModelState.IsValid)
+                {
+                    var result = _employeeService.Update(model);
 
-                if (result is false)
-                    return View();
+                    if (result is false)
+                        return View();
 
-                return RedirectToAction("Index");
+                    return RedirectToAction(ApplicationConfiguration.IndexAction);
+                }
+
+                return View();
             }
-
-            return View();
+            catch
+            {
+                return RedirectToAction(ApplicationConfiguration.ErrorAction);
+            }
         }
 
         public IActionResult Delete(int id)
         {
-            _employeeService.Delete(id);
+            try
+            {
+                _employeeService.Delete(id);
 
-            return RedirectToAction("Index");
+                return RedirectToAction(ApplicationConfiguration.IndexAction);
+            }
+            catch
+            {
+                return RedirectToAction(ApplicationConfiguration.ErrorAction);
+            }
         }
 
         public IActionResult Report()
         {
-            var positions = _employeeService.GetAll().Select(e => e.Position).Distinct();
-
-            var headerRow = new List<string[]>()
+            try
             {
-                 positions.ToArray()
-            };
+                var positions = _employeeService.GetAll().Select(e => e.Position).Distinct();
 
-            var cellData = new List<object[]>()
-            {
-                new object[positions.Count()]
-            };
-
-            int count = default;
-
-            foreach (var el in positions)
-            {
-                var salary = _employeeService.GetAll().Where(e => e.Position == el).Select(e => e.Salary);
-
-                if (salary is not null)
+                var headerRow = new List<string[]>()
                 {
-                    double averageSalary = default;
+                 positions.ToArray()
+                };
 
-                    foreach (var meaning in salary)
+                var cellData = new List<object[]>()
+                {
+                new object[positions.Count()]
+                };
+
+                int count = default;
+
+                foreach (var el in positions)
+                {
+                    var salary = _employeeService.GetAll().Where(e => e.Position == el).Select(e => e.Salary);
+
+                    if (salary is not null)
                     {
-                        averageSalary += meaning;
+                        double averageSalary = default;
+
+                        foreach (var meaning in salary)
+                        {
+                            averageSalary += meaning;
+                        }
+
+                        averageSalary /= salary.Count();
+
+                        cellData[0][count] = averageSalary;
+
+                        count++;
                     }
-
-                    averageSalary /= salary.Count();
-
-                    cellData[0][count] = averageSalary;
-
-                    count++;
                 }
+
+                _processService.OpenExcel(headerRow, cellData);
+
+                return RedirectToAction(ApplicationConfiguration.IndexAction);
             }
-
-            _processService.OpenExcel(headerRow, cellData);
-
-            return RedirectToAction("Index");
+            catch
+            {
+                return RedirectToAction(ApplicationConfiguration.ErrorAction);
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
