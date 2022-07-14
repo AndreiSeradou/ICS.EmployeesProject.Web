@@ -8,7 +8,7 @@ INSTALLATION
 
 Please make sure ASP.NET CORE MVC is installed.
 Installation link: [asp.net core mvc](https://www.microsoft.com/ru-ru/download/details.aspx?id=30683).
-The database is in the project no action needs to be taken.
+The database(SQLite) is in the project no action needs to be taken, but I had to sacrifice the ability to use stored procedures. To protect against SQL injection, parameterized commands were used and quotes were removed.
 
 REQUIREMENTS
 ------------
