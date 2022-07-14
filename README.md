@@ -7,7 +7,7 @@ INSTALLATION
 ------------
 
 Please make sure ASP.NET CORE MVC is installed.
-Installation link: [![asp.net core mvc](https://www.microsoft.com/ru-ru/download/details.aspx?id=30683)].
+Installation link: [asp.net core mvc](https://www.microsoft.com/ru-ru/download/details.aspx?id=30683).
 The database is in the project no action needs to be taken.
 
 REQUIREMENTS
@@ -20,7 +20,7 @@ QUICK START
 -----------
 
 There are two options to launch the application.
-Open the [![ICS.EmployeesProject.Web](https://github.com/AndreiSeradou/ICS.EmployeesProject.Web/tree/master/ICS.EmployeesProject.Web)] project on the command line and write dotnet run and run the application from a development environment such as Visual Studio.
+Open the [ICS.EmployeesProject.Web](https://github.com/AndreiSeradou/ICS.EmployeesProject.Web/tree/master/ICS.EmployeesProject.Web) project on the command line and write dotnet run and run the application from a development environment such as Visual Studio.
 
 WHAT'S NEXT
 -----------
