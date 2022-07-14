@@ -52,6 +52,46 @@ namespace ICS.EmployeesProject.BL.Services
             return employeesResponseList;
         }
 
+        public IEnumerable<string> GetAllPositons()
+        {
+            var result = _employeeRepository.GetAll().Select(e => e.Position).Distinct();
+
+            return result;
+        }
+
+        public List<object[]> GetAnAverageSalary(IEnumerable<string> positions)
+        {
+            var result = new List<object[]>()
+            {
+                    new object[positions.Count()]
+            };
+
+            int count = default;
+
+            foreach (var el in positions)
+            {
+                var salary = _employeeRepository.GetAll().Where(e => e.Position == el).Select(e => e.Salary);
+
+                if (salary is not null)
+                {
+                    double averageSalary = default;
+
+                    foreach (var meaning in salary)
+                    {
+                        averageSalary += meaning;
+                    }
+
+                    averageSalary /= salary.Count();
+
+                    result[0][count] = averageSalary;
+
+                    count++;
+                }
+            }
+
+            return result;
+        }
+
         public bool Update(EmployeeRequest model)
         {
             var employeeDal = _mapper.Map<Employee>(model);

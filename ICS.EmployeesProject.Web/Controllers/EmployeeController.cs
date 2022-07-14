@@ -18,15 +18,15 @@ namespace ICS.EmployeesProject.Web.Controllers
             _processService = processService;
         }
 
-        public IActionResult Index(string filterBy)
+        public IActionResult Index(string filterByPosition)
         {
             try
             {
                 var employees = _employeeService.GetAll();
 
-                if (!String.IsNullOrEmpty(filterBy))
+                if (!string.IsNullOrEmpty(filterByPosition))
                 {
-                    employees = employees.Where(e => e.Position.ToUpper().Contains(filterBy.ToUpper()));
+                    employees = employees.Where(e => e.Position.ToUpper().Contains(filterByPosition.ToUpper()));
                 }
 
                 return View(employees);
@@ -120,40 +120,14 @@ namespace ICS.EmployeesProject.Web.Controllers
         {
             try
             {
-                var positions = _employeeService.GetAll().Select(e => e.Position).Distinct();
+                var positions = _employeeService.GetAllPositons();
 
                 var headerRow = new List<string[]>()
                 {
-                 positions.ToArray()
+                    positions.ToArray()
                 };
 
-                var cellData = new List<object[]>()
-                {
-                new object[positions.Count()]
-                };
-
-                int count = default;
-
-                foreach (var el in positions)
-                {
-                    var salary = _employeeService.GetAll().Where(e => e.Position == el).Select(e => e.Salary);
-
-                    if (salary is not null)
-                    {
-                        double averageSalary = default;
-
-                        foreach (var meaning in salary)
-                        {
-                            averageSalary += meaning;
-                        }
-
-                        averageSalary /= salary.Count();
-
-                        cellData[0][count] = averageSalary;
-
-                        count++;
-                    }
-                }
+                var cellData = _employeeService.GetAnAverageSalary(positions);
 
                 _processService.OpenExcel(headerRow, cellData);
 
