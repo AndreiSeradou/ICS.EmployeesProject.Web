@@ -9,10 +9,12 @@ namespace ICS.EmployeesProject.Web.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IProcessService _processService;
 
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService, IProcessService processService)
         {
             _employeeService = employeeService;
+            _processService = processService;
         }
 
         public IActionResult Index(string filterBy)
@@ -74,6 +76,48 @@ namespace ICS.EmployeesProject.Web.Controllers
         public IActionResult Delete(int id)
         {
             _employeeService.Delete(id);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Report()
+        {
+            var positions = _employeeService.GetAll().Select(e => e.Position).Distinct();
+
+            var headerRow = new List<string[]>()
+            {
+                 positions.ToArray()
+            };
+
+            var cellData = new List<object[]>()
+            {
+                new object[positions.Count()]
+            };
+
+            int count = default;
+
+            foreach (var el in positions)
+            {
+                var salary = _employeeService.GetAll().Where(e => e.Position == el).Select(e => e.Salary);
+
+                if (salary is not null)
+                {
+                    double averageSalary = default;
+
+                    foreach (var meaning in salary)
+                    {
+                        averageSalary += meaning;
+                    }
+
+                    averageSalary /= salary.Count();
+
+                    cellData[0][count] = averageSalary;
+
+                    count++;
+                }
+            }
+
+            _processService.OpenExcel(headerRow, cellData);
 
             return RedirectToAction("Index");
         }

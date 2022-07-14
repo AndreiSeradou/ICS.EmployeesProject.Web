@@ -10,6 +10,7 @@ namespace ICS.EmployeesProject.BL.Configuration
         public static IServiceCollection RegisterService(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IEmployeeService, EmployeeService>();
+            serviceCollection.AddScoped<IProcessService, ProcessService>();
 
             return serviceCollection;
         }
