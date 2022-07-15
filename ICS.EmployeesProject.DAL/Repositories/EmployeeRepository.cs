@@ -27,17 +27,11 @@ namespace ICS.EmployeesProject.DAL.Repositories
                 using (var command = new SqliteCommand(sqlExpression, connection))
                 {
 
-                    SqliteParameter nameParam = new SqliteParameter("@Name", model.Name);
-                    SqliteParameter surnameParam = new SqliteParameter("@Surname", model.Surname);
-                    SqliteParameter positionParam = new SqliteParameter("@Position", model.Position);
-                    SqliteParameter yearOfBirthParam = new SqliteParameter("@YearOfBirth", model.YearOfBirth);
-                    SqliteParameter salaryParam = new SqliteParameter("@Salary", model.Salary);
-
-                    command.Parameters.Add(nameParam);
-                    command.Parameters.Add(surnameParam);
-                    command.Parameters.Add(positionParam);
-                    command.Parameters.Add(yearOfBirthParam);
-                    command.Parameters.Add(salaryParam);
+                    command.Parameters.AddWithValue("@Name", model.Name);
+                    command.Parameters.AddWithValue("@Surname", model.Surname);
+                    command.Parameters.AddWithValue("@Position", model.Position);
+                    command.Parameters.AddWithValue("@YearOfBirth", model.YearOfBirth);
+                    command.Parameters.AddWithValue("@Salary", model.Salary);
 
                     result = command.ExecuteNonQuery();
                 }
@@ -89,10 +83,7 @@ namespace ICS.EmployeesProject.DAL.Repositories
 
                 using (var command = new SqliteCommand(sqlExpression, connection))
                 {
-
-                    SqliteParameter idParam = new SqliteParameter("@Id", id);
-
-                    command.Parameters.Add(idParam);
+                    command.Parameters.AddWithValue("@Id", id);
 
                     using (SqliteDataReader reader = command.ExecuteReader())
                     {
@@ -139,8 +130,8 @@ namespace ICS.EmployeesProject.DAL.Repositories
 
         public bool Update(Employee model)
         {
-            var sqlExpression = "UPDATE Employees SET Name = @Name, Surname = @Surname, Position = @Position, YearOfBirth = @YearOfBirth, Salary = @Salary  WHERE Id = @Id";
             int result;
+            var sqlExpression = "UPDATE Employees SET Name = @Name, Surname = @Surname, Position = @Position, YearOfBirth = @YearOfBirth, Salary = @Salary  WHERE Id = @Id";
 
             using (var connection = new SqliteConnection(_connectionStrings.SqLiteConnectionString))
             {
@@ -148,20 +139,12 @@ namespace ICS.EmployeesProject.DAL.Repositories
 
                 using (var command = new SqliteCommand(sqlExpression, connection))
                 {
-
-                    SqliteParameter idParam = new SqliteParameter("@Id", model.Id);
-                    SqliteParameter nameParam = new SqliteParameter("@Name", model.Name);
-                    SqliteParameter surnameParam = new SqliteParameter("@Surname", model.Surname);
-                    SqliteParameter positionParam = new SqliteParameter("@Position", model.Position);
-                    SqliteParameter yearOfBirthParam = new SqliteParameter("@YearOfBirth", model.YearOfBirth);
-                    SqliteParameter salaryParam = new SqliteParameter("@Salary", model.Salary);
-
-                    command.Parameters.Add(idParam);
-                    command.Parameters.Add(nameParam);
-                    command.Parameters.Add(surnameParam);
-                    command.Parameters.Add(positionParam);
-                    command.Parameters.Add(yearOfBirthParam);
-                    command.Parameters.Add(salaryParam);
+                    command.Parameters.AddWithValue("@Id", model.Id);
+                    command.Parameters.AddWithValue("@Name", model.Name);
+                    command.Parameters.AddWithValue("@Surname", model.Surname);
+                    command.Parameters.AddWithValue("@Position", model.Position);
+                    command.Parameters.AddWithValue("@YearOfBirth", model.YearOfBirth);
+                    command.Parameters.AddWithValue("@Salary", model.Salary);
 
                     result = command.ExecuteNonQuery();
                 }
