@@ -17,8 +17,8 @@ namespace ICS.EmployeesProject.DAL.Repositories
 
         public bool Create(Employee model)
         {
-            var sqlExpression = "INSERT INTO Employees (Name, Surname, Position, YearOfBirth, Salary) VALUES (@Name, @Surname, @Position, @YearOfBirth, @Salary)";
             int result;
+            var sqlExpression = "INSERT INTO Employees (Name, Surname, Position, YearOfBirth, Salary) VALUES (@Name, @Surname, @Position, @YearOfBirth, @Salary)";
 
             using (var connection = new SqliteConnection(_connectionStrings.SqLiteConnectionString))
             {
@@ -26,7 +26,6 @@ namespace ICS.EmployeesProject.DAL.Repositories
 
                 using (var command = new SqliteCommand(sqlExpression, connection))
                 {
-
                     command.Parameters.AddWithValue("@Name", model.Name);
                     command.Parameters.AddWithValue("@Surname", model.Surname);
                     command.Parameters.AddWithValue("@Position", model.Position);
@@ -47,8 +46,8 @@ namespace ICS.EmployeesProject.DAL.Repositories
 
         public bool Delete(int id)
         {
-            var sqlExpression = $"DELETE  FROM Employees WHERE Id = @Id";
             int result;
+            var sqlExpression = $"DELETE  FROM Employees WHERE Id = @Id";
 
             using (var connection = new SqliteConnection(_connectionStrings.SqLiteConnectionString))
             {
@@ -56,9 +55,7 @@ namespace ICS.EmployeesProject.DAL.Repositories
 
                 using (var command = new SqliteCommand(sqlExpression, connection))
                 {
-                    SqliteParameter idParam = new SqliteParameter("@Id", id);
-
-                    command.Parameters.Add(idParam);
+                    command.Parameters.AddWithValue("@Id", id);
 
                     result = command.ExecuteNonQuery();
                 }
