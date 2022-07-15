@@ -24,21 +24,23 @@ namespace ICS.EmployeesProject.DAL.Repositories
             {
                 connection.Open();
 
-                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (var command = new SqliteCommand(sqlExpression, connection))
+                {
 
-                SqliteParameter nameParam = new SqliteParameter("@Name", model.Name);
-                SqliteParameter surnameParam = new SqliteParameter("@Surname", model.Surname);
-                SqliteParameter positionParam = new SqliteParameter("@Position", model.Position);
-                SqliteParameter yearOfBirthParam = new SqliteParameter("@YearOfBirth", model.YearOfBirth);
-                SqliteParameter salaryParam = new SqliteParameter("@Salary", model.Salary);
+                    SqliteParameter nameParam = new SqliteParameter("@Name", model.Name);
+                    SqliteParameter surnameParam = new SqliteParameter("@Surname", model.Surname);
+                    SqliteParameter positionParam = new SqliteParameter("@Position", model.Position);
+                    SqliteParameter yearOfBirthParam = new SqliteParameter("@YearOfBirth", model.YearOfBirth);
+                    SqliteParameter salaryParam = new SqliteParameter("@Salary", model.Salary);
 
-                command.Parameters.Add(nameParam);
-                command.Parameters.Add(surnameParam);
-                command.Parameters.Add(positionParam);
-                command.Parameters.Add(yearOfBirthParam);
-                command.Parameters.Add(salaryParam);
+                    command.Parameters.Add(nameParam);
+                    command.Parameters.Add(surnameParam);
+                    command.Parameters.Add(positionParam);
+                    command.Parameters.Add(yearOfBirthParam);
+                    command.Parameters.Add(salaryParam);
 
-                result = command.ExecuteNonQuery();
+                    result = command.ExecuteNonQuery();
+                }
             }
 
             if (result < 1)
@@ -58,13 +60,14 @@ namespace ICS.EmployeesProject.DAL.Repositories
             {
                 connection.Open();
 
-                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (var command = new SqliteCommand(sqlExpression, connection))
+                {
+                    SqliteParameter idParam = new SqliteParameter("@Id", id);
 
-                SqliteParameter idParam = new SqliteParameter("@Id", id);
+                    command.Parameters.Add(idParam);
 
-                command.Parameters.Add(idParam);
-
-                result = command.ExecuteNonQuery();
+                    result = command.ExecuteNonQuery();
+                }
             }
 
             if (result < 1)
@@ -84,19 +87,21 @@ namespace ICS.EmployeesProject.DAL.Repositories
             {
                 connection.Open();
 
-                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-
-                SqliteParameter idParam = new SqliteParameter("@Id", id);
-
-                command.Parameters.Add(idParam);
-
-                using (SqliteDataReader reader = command.ExecuteReader())
+                using (var command = new SqliteCommand(sqlExpression, connection))
                 {
-                    if (reader.HasRows)
+
+                    SqliteParameter idParam = new SqliteParameter("@Id", id);
+
+                    command.Parameters.Add(idParam);
+
+                    using (SqliteDataReader reader = command.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.HasRows)
                         {
-                            employee = new Employee { Id = reader.GetInt32(0), Name = reader.GetString(1), Surname = reader.GetString(2), Position = reader.GetString(3), YearOfBirth = reader.GetInt32(4), Salary = reader.GetInt32(5) };
+                            while (reader.Read())
+                            {
+                                employee = new Employee { Id = reader.GetInt32(0), Name = reader.GetString(1), Surname = reader.GetString(2), Position = reader.GetString(3), YearOfBirth = reader.GetInt32(4), Salary = reader.GetInt32(5) };
+                            }
                         }
                     }
                 }
@@ -114,15 +119,16 @@ namespace ICS.EmployeesProject.DAL.Repositories
             {
                 connection.Open();
 
-                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-
-                using (SqliteDataReader reader = command.ExecuteReader())
+                using (var command = new SqliteCommand(sqlExpression, connection))
                 {
-                    if (reader.HasRows)
+                    using (SqliteDataReader reader = command.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.HasRows)
                         {
-                            employeeList.Add(new Employee { Id = reader.GetInt32(0), Name = reader.GetString(1), Surname = reader.GetString(2), Position = reader.GetString(3), YearOfBirth = reader.GetInt32(4), Salary = reader.GetInt32(5) });
+                            while (reader.Read())
+                            {
+                                employeeList.Add(new Employee { Id = reader.GetInt32(0), Name = reader.GetString(1), Surname = reader.GetString(2), Position = reader.GetString(3), YearOfBirth = reader.GetInt32(4), Salary = reader.GetInt32(5) });
+                            }
                         }
                     }
                 }
@@ -140,23 +146,25 @@ namespace ICS.EmployeesProject.DAL.Repositories
             {
                 connection.Open();
 
-                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (var command = new SqliteCommand(sqlExpression, connection))
+                {
 
-                SqliteParameter idParam = new SqliteParameter("@Id", model.Id);
-                SqliteParameter nameParam = new SqliteParameter("@Name", model.Name);
-                SqliteParameter surnameParam = new SqliteParameter("@Surname", model.Surname);
-                SqliteParameter positionParam = new SqliteParameter("@Position", model.Position);
-                SqliteParameter yearOfBirthParam = new SqliteParameter("@YearOfBirth", model.YearOfBirth);
-                SqliteParameter salaryParam = new SqliteParameter("@Salary", model.Salary);
+                    SqliteParameter idParam = new SqliteParameter("@Id", model.Id);
+                    SqliteParameter nameParam = new SqliteParameter("@Name", model.Name);
+                    SqliteParameter surnameParam = new SqliteParameter("@Surname", model.Surname);
+                    SqliteParameter positionParam = new SqliteParameter("@Position", model.Position);
+                    SqliteParameter yearOfBirthParam = new SqliteParameter("@YearOfBirth", model.YearOfBirth);
+                    SqliteParameter salaryParam = new SqliteParameter("@Salary", model.Salary);
 
-                command.Parameters.Add(idParam);
-                command.Parameters.Add(nameParam);
-                command.Parameters.Add(surnameParam);
-                command.Parameters.Add(positionParam);
-                command.Parameters.Add(yearOfBirthParam);
-                command.Parameters.Add(salaryParam);
+                    command.Parameters.Add(idParam);
+                    command.Parameters.Add(nameParam);
+                    command.Parameters.Add(surnameParam);
+                    command.Parameters.Add(positionParam);
+                    command.Parameters.Add(yearOfBirthParam);
+                    command.Parameters.Add(salaryParam);
 
-                result = command.ExecuteNonQuery();
+                    result = command.ExecuteNonQuery();
+                }
             }
 
             if (result < 1)
